@@ -10,12 +10,6 @@ use Symfony\Component\Routing\Annotation\Route;
 final class IndexController extends AbstractController
 {
     /**
-     * @Route("/api", name="ok")
-     */
-    public function ok() {
-        return Response::create('ok', 200);
-    }
-    /**
      * @Route("/{vueRouting}", name="index", requirements={"page"="/^((?!^api\/).)*$/igm"})
      * @Route("/", name="index_empty")
      * @return Response
