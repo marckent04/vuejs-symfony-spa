@@ -10,11 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 final class IndexController extends AbstractController
 {
     /**
-     * @Route("/{vueRouting}", name="index", requirements={"page"="/^((?!^api\/).)*$/igm"})
+     * @Route("/{vueRouting}", name="index", requirements={"vueRouting"="^(?!api|_(profiler|wdt)).*"})
      * @Route("/", name="index_empty")
      * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction($vueRouting): Response
     {
         return $this->render('base.html.twig', []);
     }

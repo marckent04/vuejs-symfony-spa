@@ -12,6 +12,17 @@
 
 <script>
     export default {
-        name: "Home"
+        name: "Home",
+        data() {
+          return {
+              articles: []
+          }
+        },
+        mounted() {
+            this.axios.get('http://localhost:8000/api/articles').then(v => {
+                console.log(v)
+                // this.articles = []
+            })
+        }
     };
 </script>
