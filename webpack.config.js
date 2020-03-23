@@ -7,7 +7,7 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
-// directory where compiled assets will be stored
+// directory where compiled frontend will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
@@ -23,9 +23,9 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
-    .addEntry('app', './assets/vue/index.js')
-    //.addEntry('page1', './assets/js/page1.js')
-    //.addEntry('page2', './assets/js/page2.js')
+    .addEntry('app', './frontend/vue/index.js')
+    //.addEntry('page1', './frontend/js/page1.js')
+    //.addEntry('page2', './frontend/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -74,7 +74,7 @@ Encore
 
 // uncomment if you use API Platform Admin (composer req api-admin)
 //.enableReactPreset()
-//.addEntry('admin', './assets/js/admin.js')
+//.addEntry('admin', './frontend/js/admin.js')
 ;
 
 module.exports = Encore.getWebpackConfig();
