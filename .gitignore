@@ -5,7 +5,7 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /config/jwt/
-/Migrations/
+/src/Migrations/
 /public/bundles/
 /var/
 /vendor/

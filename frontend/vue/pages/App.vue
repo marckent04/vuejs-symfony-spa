@@ -1,46 +1,21 @@
 <template>
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <router-link
-                    class="navbar-brand"
-                    to="/"
-            >
-                App
-            </router-link>
-            <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-            >
-                <span class="navbar-toggler-icon" />
-            </button>
-            <div
-                    id="navbarNav"
-                    class="collapse navbar-collapse"
-            >
-                <ul class="navbar-nav">
-                    <router-link
-                            class="nav-item"
-                            tag="li"
-                            to="/home"
-                            active-class="active"
-                    >
-                        <a class="nav-link">Home</a>
-                    </router-link>
-                </ul>
-            </div>
-        </nav>
-
-        <router-view />
-    </div>
+  <transition name="fade">
+    <router-view />
+  </transition>
 </template>
 
 <script>
-    export default {
-        name: "App",
-    }
+export default {
+  name: "App",
+};
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

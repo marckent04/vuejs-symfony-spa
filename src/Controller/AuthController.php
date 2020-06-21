@@ -3,49 +3,67 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
+use FOS\RestBundle\View\View;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
-class AuthController extends AbstractController
+class AuthController extends AbstractFOSRestController
 {
     /**
-     * @Route("/signin", name="sign_in", methods={"POST"})
+     * @Rest\Post("/api/register")
      */
-    public function signIn(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer)
+    public function signIn(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, ValidatorInterface $validator)
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-        dd($form->getData());
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain passwor d
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
+        $data = json_decode($request->getContent());
+        $user->setUsername($data->username);
+        $user->setPassword($data->password);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+        $errors = $validator->validate($user);
 
-            // do anything else you need here, like send an email
-
-            return JsonResponse::create([
-                'status' => 'ok'
-            ]);
+        if (count($errors) > 0) {
+            return View::create($errors);
         }
 
-        if ($form->getErrors()) {
-            return JsonResponse::create($serializer->serialize($form->getErrors(), 'json'));
-            // return JsonResponse::create($);
-        }
+        $user->setPassword(
+            $passwordEncoder->encodePassword(
+                $user,
+                $data->password
+            )
+        );
+
+        $manager->persist($user);
+        $manager->flush();
+
+        return View::create($user, Response::HTTP_CREATED);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     // encode the plain password
+        //     $user->setPassword(
+        //         $passwordEncoder->encodePassword(
+        //             $user,
+        //             $form->get('password')->getData()
+        //         )
+        //     );
+
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($user);
+        //     $entityManager->flush();
+
+        //     // do anything else you need here, like send an email
+
+        //     return View::create([
+        //         'status' => 'ok'
+        //     ]);
+        // }
+
+        // if ($form->getErrors()) {
+        //     return View::create($form->getErrors());
+        //     // return JsonResponse::create($);
+        // }
     }
 }

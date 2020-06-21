@@ -6,6 +6,8 @@ import VueAxios from 'vue-axios'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Vuex from 'vuex'
+import Toasted from 'vue-toasted';
+import store from './store/index'
 
 
 // Mpdules
@@ -13,10 +15,13 @@ Vue.use(Vuex)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueAxios, axios)
+Vue.use(Toasted)
+
 
 new Vue({
     el: "#app",
     components: { App },
     template: "<App/>",
+    store,
     router
 })

@@ -1,15 +1,27 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../pages/Home";
-import Index from "../pages/Index"
-import Error404 from "../pages/Error404";
-Vue.use(VueRouter);
+import Vue from "vue"
+import VueRouter from "vue-router"
+import Home from "../pages/Home"
+import Login from "../pages/auth/Login"
+import Signup from "../pages/auth/Signup"
 
-export default new VueRouter({
+Vue.use(VueRouter)
+
+const isAuthenticated = localStorage.getItem('token')
+
+const router = new VueRouter({
     mode: "history",
     routes: [
-        { path: "/:api(\\^\/api)"},
+        { path: "/:api(\\^\/api)" },
         { path: "/home", component: Home },
-        { path: "/", component: Index },
+        { path: "/login", component: Login, name: "login" },
+        { path: "/register", component: Signup, name: "register" },
+        { path: "/", redirect: '/login' },
     ]
-});
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'login' && to.name !== 'register' && !isAuthenticated) next({ name: 'login' })
+    else next()
+})
+
+export default router
