@@ -1,3 +1,5 @@
+import createPersistedState from 'vuex-persistedstate'
+
 const state = () => ({
     username: '',
     password: '',
@@ -16,14 +18,19 @@ const actions = {
 
 // mutations
 const mutations = {
-    updateAuthInfos(state, infos) {
+    login(state, infos) {
         const { username, password, token, refreshToken } = infos;
         state.token = token
         state.refreshToken = refreshToken
         state.username = username
         state.password = password
+    },
+    logout(state) {
+        state.token = ''
+        state.refreshToken = ''
+        state.username = ''
+        state.password = ''
     }
-
 }
 
 export default {

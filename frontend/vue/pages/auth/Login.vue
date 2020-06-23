@@ -59,9 +59,10 @@ export default {
         const res = await AuthService.login(payload);
         const data = res.data;
         payload.token = data.token;
-        payload.refreshToken = data.refreshToken;
-        this.$store.commit("auth/updateAuthInfos", payload);
-        this.$router.push({ name: "login" });
+        payload.refreshToken = data["refresh_token"];
+        delete payload.password;
+        this.$store.commit("auth/login", payload);
+        this.$router.push({ name: "home" });
       } catch (error) {
         const errData = error.response;
         this.$toasted.error(errData.message);

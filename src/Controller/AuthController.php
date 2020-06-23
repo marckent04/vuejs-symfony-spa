@@ -12,19 +12,36 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Class AuthController
+ * @package App\Controller
+ * @Rest\Route("/api")
+ */
 class AuthController extends AbstractFOSRestController
 {
+    private $manager;
+    private $validator;
+
+    public function __construct(EntityManagerInterface $manager, ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+        $this->manager = $manager;
+    }
+
     /**
-     * @Rest\Post("/api/register")
+     * @Rest\Post("/register")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return View
      */
-    public function signIn(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, ValidatorInterface $validator)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
         $data = json_decode($request->getContent());
         $user->setUsername($data->username);
         $user->setPassword($data->password);
 
-        $errors = $validator->validate($user);
+        $errors = $this->validator->validate($user);
 
         if (count($errors) > 0) {
             return View::create($errors);
@@ -37,33 +54,15 @@ class AuthController extends AbstractFOSRestController
             )
         );
 
-        $manager->persist($user);
-        $manager->flush();
+        $this->manager->persist($user);
+        $this->manager->flush();
 
         return View::create($user, Response::HTTP_CREATED);
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     // encode the plain password
-        //     $user->setPassword(
-        //         $passwordEncoder->encodePassword(
-        //             $user,
-        //             $form->get('password')->getData()
-        //         )
-        //     );
-
-        //     $entityManager = $this->getDoctrine()->getManager();
-        //     $entityManager->persist($user);
-        //     $entityManager->flush();
-
-        //     // do anything else you need here, like send an email
-
-        //     return View::create([
-        //         'status' => 'ok'
-        //     ]);
-        // }
-
-        // if ($form->getErrors()) {
-        //     return View::create($form->getErrors());
-        //     // return JsonResponse::create($);
-        // }
     }
+
+    public function getInfosClient()
+    {
+
+    }
+
 }
